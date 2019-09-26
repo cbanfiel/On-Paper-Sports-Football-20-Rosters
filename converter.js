@@ -5797,6 +5797,7 @@ function setCustomPlayoffSeeds() {
       name: teams[i].name,
       id: teams[i].id,
       conferenceId: teams[i].conferenceId,
+      division: teams[i].division,
       logoSrc: teams[i].logoSrc,
       roster: ros
     };
