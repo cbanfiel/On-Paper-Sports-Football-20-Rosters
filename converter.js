@@ -7371,7 +7371,7 @@ function bowlGameSetup(){
 
   }
 
-  balanceRoster();
+  // balanceRoster();
 
 
  function checkIfByeNeeded(input){
