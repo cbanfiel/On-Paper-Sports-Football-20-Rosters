@@ -2,12 +2,12 @@
 [
     {
         "name": "NFL 19-20",
-        "link": "",
+        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NFL%202019-20.json",
         "type": "Roster"
     },
       {
         "name": "NCAA 19-20",
-        "link": "",
+        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20.json",
         "type": "Roster",
         "sliderType": "college"
     }
