@@ -1,0 +1,14 @@
+
+[
+    {
+        "name": "NFL 19-20",
+        "link": "",
+        "type": "Roster"
+    },
+      {
+        "name": "NCAA 19-20",
+        "link": "",
+        "type": "Roster",
+        "sliderType": "college"
+    }
+]
