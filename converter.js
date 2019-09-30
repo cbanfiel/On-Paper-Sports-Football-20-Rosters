@@ -5838,35 +5838,35 @@ function setCustomPlayoffSeeds() {
   return write;
 }
 
- async function getDataFromLink(link, type, sliderType) {
-  type = type.toLowerCase();
-  try {
-    let response = await fetch(link);
-    let responseJson = await response.json();
-    if (type === "roster") {
-      loadRosterJson(responseJson);
-      if (sliderType === "college") {
-        collegeSliderPreset();
-        resetFranchise();
-      }
-    } else if (type === "team") {
-      importTeamJson(responseJson);
-    } else if (type === "draftclass") {
-      importDraftClassJson(responseJson);
-    } else if (type === "communityroster") {
-      communityRosters = responseJson;
-    }
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-}
+//  async function getDataFromLink(link, type, sliderType) {
+//   type = type.toLowerCase();
+//   try {
+//     let response = await fetch(link);
+//     let responseJson = await response.json();
+//     if (type === "roster") {
+//       loadRosterJson(responseJson);
+//       if (sliderType === "college") {
+//         collegeSliderPreset();
+//         resetFranchise();
+//       }
+//     } else if (type === "team") {
+//       importTeamJson(responseJson);
+//     } else if (type === "draftclass") {
+//       importDraftClassJson(responseJson);
+//     } else if (type === "communityroster") {
+//       communityRosters = responseJson;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// }
 
- let communityRosters = [];
-communityRosters = getDataFromLink(
-  "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Hockey-20-Rosters/master/communityfiles.json",
-  "communityroster"
-);
+//  let communityRosters = [];
+// communityRosters = getDataFromLink(
+//   "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Hockey-20-Rosters/master/communityfiles.json",
+//   "communityroster"
+// );
 
 //checked
  function loadRosterJson(loadedDataIn) {
@@ -7404,12 +7404,17 @@ function bowlGameSetup(){
     });
 }
 
+
 function manageCFPPollRating(){
   for(let i=0; i<teams.length; i++){
     let team = teams[i];
+    console.log(team.name);
     let oldRating = team.rating;
     let maxChange = 5;
+    console.log(team.opsRanking);
     let rating = Math.round(scaleBetween(team.opsRanking, 93,70,1,130));
+console.log(`${team.name} old:${oldRating} new:${rating}`);
+
     
     if (team.rating > rating) {
       while (team.rating != rating) {
@@ -7449,24 +7454,22 @@ function manageCFPPollRating(){
           }
           ply.calculateRating();
           team.calculateRating();
+        }
           if (team.rating <= rating) {
-            return;
+            break;
           }
           if ((oldRating-team.rating) >= maxChange) {
-            return;
+            break;
           }
-        }
       }
     }
-  
-    else if (team.rating < rating) {
+    if (team.rating < rating) {
       while (team.rating != rating) {
         for (let i = 0; i < team.roster.length; i++) {
           let ply = team.roster[i];
           ply.awareness ++;
           if(ply.position === POS_QB){
             ply.pass ++;
-      
           }
       
           if(ply.position >= POS_HB && ply.position <= POS_TE){
@@ -7497,19 +7500,21 @@ function manageCFPPollRating(){
           }
           ply.calculateRating();
           team.calculateRating();
+        }
           if (team.rating >= rating) {
-            return;
+            break;
           }
           if ((oldRating-team.rating)*-1 >= maxChange) {
-            return;
+            break;
           }
-        }
   }
 }
+console.log(`${team.name} old:${oldRating} new:${team.rating}`);
   }
 }
 
-manageCFPPollRating();
+
+manageCFPPollRating()
 
 // balanceRoster();
 
