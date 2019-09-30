@@ -7412,7 +7412,13 @@ function manageCFPPollRating(){
     let oldRating = team.rating;
     let maxChange = 5;
     console.log(team.opsRanking);
-    let rating = Math.round(scaleBetween(team.opsRanking, 93,70,1,130));
+    let rating = 0;
+    if(team.opsRanking <= 25){
+    rating = Math.round(scaleBetween(team.opsRanking, 93,83,1,25));
+    }else{
+    rating = Math.round(scaleBetween(team.opsRanking, 83,67,25,130));
+    }
+    
 console.log(`${team.name} old:${oldRating} new:${rating}`);
 
     
