@@ -1,8 +1,8 @@
-var teamsData = require("./JSON/Teams.json");
-// var teamsData = require("./JSON/NCAA/Teams.json");
+// var teamsData = require("./JSON/Teams.json");
+var teamsData = require("./JSON/NCAA/Teams.json");
 
-var playerData = require("./JSON/Players.json");
-// var playerData = require("./JSON/NCAA/Players.json");
+// var playerData = require("./JSON/Players.json");
+var playerData = require("./JSON/NCAA/Players.json");
 
 var freeAgents = require("./JSON/FreeAgents.json");
 
@@ -570,6 +570,7 @@ class Team {
     this.id = team.id;
     this.name = team.name;
     this.rating = 0;
+    this.opsRanking = team.opsRank;
 
     //this will be updated every game
     this.defenseRating = 0;
@@ -7403,8 +7404,114 @@ function bowlGameSetup(){
     });
 }
 
+function manageCFPPollRating(){
+  for(let i=0; i<teams.length; i++){
+    let team = teams[i];
+    let oldRating = team.rating;
+    let maxChange = 5;
+    let rating = Math.round(scaleBetween(team.opsRanking, 93,70,1,130));
+    
+    if (team.rating > rating) {
+      while (team.rating != rating) {
+        for (let i = 0; i < team.roster.length; i++) {
+          let ply = team.roster[i];
+          ply.awareness --;
+          if(ply.position === POS_QB){
+            ply.pass --;
+      
+          }
+      
+          if(ply.position >= POS_HB && ply.position <= POS_TE){
+            ply.rush --;
+            // ply.speed --;
+            ply.catch --;
+            ply.block --;
+          }
+      
+          if(ply.position >= POS_LT && ply.position <= POS_RT){
+            ply.block --;
+          }
+      
+          if(ply.position >= POS_LE && ply.position <= POS_RE){
+            ply.breakBlock --;
+            ply.tackle --;
+          }
+      
+          if(ply.position >= POS_LOLB && ply.position <= POS_SS){
+            ply.breakBlock --;
+            ply.tackle --;
+            ply.catch --;
+            // ply.speed --;
+          }
+      
+          if(ply.position >= POS_K && ply.position <= POS_P){
+            ply.kick --;
+          }
+          ply.calculateRating();
+          team.calculateRating();
+          if (team.rating <= rating) {
+            return;
+          }
+          if ((oldRating-team.rating) >= maxChange) {
+            return;
+          }
+        }
+      }
+    }
+  
+    else if (team.rating < rating) {
+      while (team.rating != rating) {
+        for (let i = 0; i < team.roster.length; i++) {
+          let ply = team.roster[i];
+          ply.awareness ++;
+          if(ply.position === POS_QB){
+            ply.pass ++;
+      
+          }
+      
+          if(ply.position >= POS_HB && ply.position <= POS_TE){
+            ply.rush ++;
+            // ply.speed ++;
+            ply.catch ++;
+            ply.block ++;
+          }
+      
+          if(ply.position >= POS_LT && ply.position <= POS_RT){
+            ply.block ++;
+          }
+      
+          if(ply.position >= POS_LE && ply.position <= POS_RE){
+            ply.breakBlock ++;
+            ply.tackle ++;
+          }
+      
+          if(ply.position >= POS_LOLB && ply.position <= POS_SS){
+            ply.breakBlock ++;
+            ply.tackle ++;
+            ply.catch ++;
+            // ply.speed ++;
+          }
+      
+          if(ply.position >= POS_K && ply.position <= POS_P){
+            ply.kick ++;
+          }
+          ply.calculateRating();
+          team.calculateRating();
+          if (team.rating >= rating) {
+            return;
+          }
+          if ((oldRating-team.rating)*-1 >= maxChange) {
+            return;
+          }
+        }
+  }
+}
+  }
+}
 
-balanceRoster();
+manageCFPPollRating();
+
+// balanceRoster();
 
 makeRosterFilePC();
 

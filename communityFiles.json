@@ -11,4 +11,11 @@
         "type": "Roster",
         "sliderType": "college"
     }
+    ,
+      {
+        "name": "NCAA 19-20 V2 Test Roster",
+        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20V2.json",
+        "type": "Roster",
+        "sliderType": "college"
+    }
 ]
