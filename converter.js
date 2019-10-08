@@ -1,12 +1,16 @@
-// var teamsData = require("./JSON/Teams.json");
-var teamsData = require("./JSON/NCAA/Teams.json");
+var teamsData = require("./JSON/Teams.json");
+// var teamsData = require("./JSON/NCAA/Teams.json");
 
-// var playerData = require("./JSON/Players.json");
-var playerData = require("./JSON/NCAA/Players.json");
+var playerData = require("./JSON/Players.json");
+// var playerData = require("./JSON/NCAA/Players.json");
 
 var freeAgents = require("./JSON/FreeAgents.json");
 
 var draftData = require("./JSON/DraftData.json");
+
+var playersToGen = require('./JSON/GeneratedPlayers.json');
+
+console.log(playersToGen[0].name);
 
 //for draft trades
  let inDraft = false;
@@ -201,6 +205,7 @@ let autoSign = true;
 
 class Player {
   constructor(player) {
+
     this.name = player.name;
     this.position = player.position;
     this.positionString;
@@ -1210,8 +1215,12 @@ conferences.push(easternConference, westernConference);
     teams.push(new Team(teamsData[i]));
     for (let j = 0; j < playerData.length; j++) {
       if (playerData[j].team === teams[i].id) {
-        ply = new Player(playerData[j]);
-        ply.calculateRating();
+          ply = new Player(playerData[j]);
+          ply.calculateRating();
+          //checks for made up players with name XXXX
+          if(ply.name.includes('XX')){
+          ply = generatePlayer(ply.position, 65);   
+          }
         teams[i].roster.push(ply);
         ply.teamLogoSrc = teams[i].logoSrc;
         ply.teamName = teams[i].name;
@@ -7520,9 +7529,29 @@ console.log(`${team.name} old:${oldRating} new:${team.rating}`);
 }
 
 
-manageCFPPollRating()
 
-// balanceRoster();
+
+function generatedPlayerGeneration(){
+  availableFreeAgents.roster = [];
+  for(let i=0; i<playersToGen.length; i++){
+    let data = playersToGen[i];
+    let ovr = Math.round(scaleBetween(data.rank, 82,65, 1, playersToGen.length));
+    console.log(ovr);
+    console.log(data.position);
+    if(data.position >= 0){
+
+      let ply = generatePlayer(data.position, ovr);
+      ply.name = data.name;
+      availableFreeAgents.roster.push(ply);
+    }
+  }
+}
+
+generatedPlayerGeneration();
+
+// manageCFPPollRating()
+
+balanceRoster();
 
 makeRosterFilePC();
 
