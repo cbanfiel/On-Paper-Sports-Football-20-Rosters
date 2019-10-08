@@ -15,5 +15,11 @@
         "name": "NFL 19-20 v2 Test",
         "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NFL%202019-20v2.json",
         "type": "Roster"
+    },
+    {
+        "name": "NCAA 19-20 v3 Test",
+        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20v3.json",
+        "type": "Roster",
+        "sliderType": "college"
     }
 ]

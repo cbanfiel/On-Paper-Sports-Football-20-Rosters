@@ -1,8 +1,8 @@
-var teamsData = require("./JSON/Teams.json");
-// var teamsData = require("./JSON/NCAA/Teams.json");
+// var teamsData = require("./JSON/Teams.json");
+var teamsData = require("./JSON/NCAA/Teams.json");
 
-var playerData = require("./JSON/Players.json");
-// var playerData = require("./JSON/NCAA/Players.json");
+// var playerData = require("./JSON/Players.json");
+var playerData = require("./JSON/NCAA/Players.json");
 
 var freeAgents = require("./JSON/FreeAgents.json");
 
@@ -7547,11 +7547,11 @@ function generatedPlayerGeneration(){
   }
 }
 
-generatedPlayerGeneration();
+// generatedPlayerGeneration();
 
-// manageCFPPollRating()
+manageCFPPollRating()
 
-balanceRoster();
+// balanceRoster();
 
 makeRosterFilePC();
 
