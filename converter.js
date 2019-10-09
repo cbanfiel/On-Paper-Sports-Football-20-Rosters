@@ -7596,7 +7596,7 @@ function generatedPlayerGenerationToTeam(){
      if(data.position === "S"){
       position = 18;
     }
-     if(data.position === "K"){
+     if(data.position === "PK"){
       position = 19;
     }
     if(data.position === "P"){
@@ -7619,15 +7619,35 @@ function generatedPlayerGenerationToTeam(){
       // console.log(data.opsId);
     }
     if(position >= 0){
+
       let ply = generatePlayer(position, ovr);
       // console.log(ply.name);
       ply.name = data.name;
-      ply.age = data.age;
+      ply.age = age;
       ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
       for(let j=0; j<teams.length; j++){
         if(teams[j].id === data.opsId){
+
+          let signable = true;
+          if(position === 19){
+            if(teams[j].ks.length >0){
+              signable = false;
+            }
+          }
+
+          if(position === 20){
+            if(teams[j].ps.length >0){
+              signable = false;
+            }
+          }
+
           // console.log('pushed');
-          teams[j].roster.push(ply);
+          if(signable){
+            teams[j].roster.push(ply);
+            ply.teamLogoSrc = teams[j].logoSrc;
+            ply.teamName = teams[j].name;
+          }
         }
       }
     }
