@@ -69,7 +69,7 @@ console.log(playersToGen[0].name);
 
 
 
-const rosterSize = 70;
+const rosterSize = 65;
 const maxRosterSize = 70;
  const CAPROOM = 190000000;
 const VETERANSMINIMUM = 700000;
@@ -7551,8 +7551,10 @@ function generatedPlayerGeneration(){
 
 function generatedPlayerGenerationToTeam(){
   availableFreeAgents.roster = [];
-  for(let i=0; i<playersToGen.length; i++){
-    let data = playersToGen[i];
+  for(let i=0; i<teams.length; i++){
+  for(let j=0; j<playersToGen.length; j++){
+    if(playersToGen[j].opsId === teams[i].id){
+    let data = playersToGen[j];
     let ovr = 60;
     let age;
     let position = -1;
@@ -7615,42 +7617,189 @@ function generatedPlayerGenerationToTeam(){
     else{
       age = 21;
     }
-    if(age === 21){
-      // console.log(data.opsId);
-    }
-    if(position >= 0){
 
+    if(teams[i].qbs.length < POS_QB_REQUIREMENTS+1 && position === POS_QB){
+      console.log(teams[i].name);
+      ovr = teams[i].qbs[teams[i].qbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
       let ply = generatePlayer(position, ovr);
-      // console.log(ply.name);
       ply.name = data.name;
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
-      for(let j=0; j<teams.length; j++){
-        if(teams[j].id === data.opsId){
+      teams[i].qbs.push(ply);
+      teams[i].roster.push(ply);
 
-          let signable = true;
-          if(position === 19){
-            if(teams[j].ks.length >0){
-              signable = false;
-            }
-          }
-
-          if(position === 20){
-            if(teams[j].ps.length >0){
-              signable = false;
-            }
-          }
-
-          // console.log('pushed');
-          if(signable){
-            teams[j].roster.push(ply);
-            ply.teamLogoSrc = teams[j].logoSrc;
-            ply.teamName = teams[j].name;
-          }
-        }
-      }
     }
+    else if(teams[i].rbs.length < POS_HB_REQUIREMENTS && position === POS_HB){
+      ovr = teams[i].rbs[teams[i].rbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].rbs.push(ply);
+      teams[i].roster.push(ply);
+
+
+    }
+    else if(teams[i].wrs.length < POS_WR_REQUIREMENTS && position === POS_WR){
+      ovr = teams[i].wrs[teams[i].wrs.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].wrs.push(ply);
+      teams[i].roster.push(ply);
+
+
+    }
+    else if(teams[i].tes.length < POS_TE_REQUIREMENTS && position === POS_TE){
+      ovr = teams[i].tes[teams[i].tes.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].tes.push(ply);
+      teams[i].roster.push(ply);
+
+
+    }
+    else if(teams[i].ol.length < POS_OL_REQUIREMENTS && position >= POS_LT && position <= POS_RT){
+      ovr = teams[i].ol[teams[i].ol.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].ol.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+    else if(teams[i].dl.length < POS_DL_REQUIREMENTS && position >= POS_LE && position <= POS_DT){
+      ovr = teams[i].dl[teams[i].dl.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].dl.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+    else if(teams[i].lbs.length < POS_LB_REQUIREMENTS && position >= POS_LOLB && position <= POS_ROLB){
+      ovr = teams[i].lbs[teams[i].lbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].lbs.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+    else if(teams[i].dbs.length < POS_DB_REQUIREMENTS && position >= POS_CB && position <= POS_SS){
+      ovr = teams[i].dbs[teams[i].dbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].dbs.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+    else if(teams[i].ks.length < POS_K_REQUIREMENTS && position === POS_K){
+      console.log(teams[i].name);
+      ovr = teams[i].ks[teams[i].ks.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].ks.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+    else if(teams[i].ps.length < POS_P_REQUIREMENTS && position === POS_P){
+      ovr = teams[i].ps[teams[i].ps.length -1] - (Math.round(Math.random()*5))+3;
+      if(ovr<61){
+        ovr = 61;
+      }
+      if(ovr>74){
+        ovr  = 74;
+      }
+      let ply = generatePlayer(position, ovr);
+      ply.name = data.name;
+      ply.age = age;
+      ply.height = data.height;
+      ply.faceSrc = data.faceSrc;
+      teams[i].ps.push(ply);
+      teams[i].roster.push(ply);
+
+    }
+          
+
+    }
+  }
+
+  teams[i].reorderLineup();
+
   }
 }
 
@@ -7762,7 +7911,7 @@ function releasePlayers() {
 
 generatedPlayerGenerationToTeam();
 
-releasePlayers();
+// releasePlayers();
 
 manageCFPPollRating()
 
