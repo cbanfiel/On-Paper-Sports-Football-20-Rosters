@@ -7560,7 +7560,7 @@ function generatedPlayerGenerationToTeam(){
     if(data.position === "QB"){
       position = 0;
     }
-    if(data.position === "HB"){
+    if(data.position === "RB"){
       position = 1;
     }
     if(data.position === "WR"){
@@ -7591,7 +7591,7 @@ function generatedPlayerGenerationToTeam(){
       position = 16;
     }
     if(data.position === "DB"){
-      position = 16;
+      position = 17;
     }
      if(data.position === "S"){
       position = 18;
