@@ -1,25 +1,14 @@
 
 [
     {
-        "name": "NFL 19-20",
-        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NFL%202019-20.json",
-        "type": "Roster"
-    },
-    {
-        "name": "NCAA 19-20 v2 (9/30/19)",
-        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20V2.json",
-        "type": "Roster",
-        "sliderType": "college"
-    },
-    {
-        "name": "NFL 19-20 v3 Test",
+        "name": "NFL 19-20 v2 (10/9/19)",
         "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NFL%202019-20v3.json",
         "type": "Roster"
     },
     {
-        "name": "NCAA 19-20 v3 Test2",
+        "name": "NCAA 19-20 v3 (10/9/19)",
         "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20v3.json",
         "type": "Roster",
         "sliderType": "college"
-    }
+    },
 ]
