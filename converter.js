@@ -8,7 +8,9 @@ var freeAgents = require("./JSON/FreeAgents.json");
 
 var draftData = require("./JSON/DraftData.json");
 
-var playersToGen = require('./JSON/GeneratedPlayers.json');
+// var playersToGen = require('./JSON/GeneratedPlayers.json');
+var playersToGen = require('./JSON/NCAA/GeneratedPlayers.json');
+
 
 console.log(playersToGen[0].name);
 
@@ -67,7 +69,7 @@ console.log(playersToGen[0].name);
 
 
 
-const rosterSize = 55;
+const rosterSize = 70;
 const maxRosterSize = 70;
  const CAPROOM = 190000000;
 const VETERANSMINIMUM = 700000;
@@ -7547,7 +7549,189 @@ function generatedPlayerGeneration(){
   }
 }
 
+function generatedPlayerGenerationToTeam(){
+  availableFreeAgents.roster = [];
+  for(let i=0; i<playersToGen.length; i++){
+    let data = playersToGen[i];
+    let ovr = 60;
+    let age;
+    let position = -1;
+
+    if(data.position === "QB"){
+      position = 0;
+    }
+    if(data.position === "HB"){
+      position = 1;
+    }
+    if(data.position === "WR"){
+      position = 3;
+    }
+    if(data.position === "TE"){
+      position = 4;
+    }
+    if(data.position === "OL"){
+      position = 5;
+    }
+    if(data.position === "DL"){
+      position = 10;
+    }
+    if(data.position === "DT"){
+      position = 12;
+    }
+    if(data.position === "LB"){
+      position = 13;
+    }
+    if(data.position === "OLB"){
+      position = 15;
+    }
+    if(data.position === "ILB"){
+      position = 14;
+    }
+     if(data.position === "CB"){
+      position = 16;
+    }
+    if(data.position === "DB"){
+      position = 16;
+    }
+     if(data.position === "S"){
+      position = 18;
+    }
+     if(data.position === "K"){
+      position = 19;
+    }
+    if(data.position === "P"){
+      position = 20;
+    }
+
+    if(data.year === "FR"){
+      age = 18;
+    }
+    else if(data.year === "SO"){
+      age = 19;
+    }
+    else if(data.year === "JR"){
+      age = 20;
+    }
+    else{
+      age = 21;
+    }
+    if(age === 21){
+      // console.log(data.opsId);
+    }
+    if(position >= 0){
+      let ply = generatePlayer(position, ovr);
+      // console.log(ply.name);
+      ply.name = data.name;
+      ply.age = data.age;
+      ply.height = data.height;
+      for(let j=0; j<teams.length; j++){
+        if(teams[j].id === data.opsId){
+          // console.log('pushed');
+          teams[j].roster.push(ply);
+        }
+      }
+    }
+  }
+}
+
+
+
+function releasePlayers() {
+    for (let i = 0; i < teams.length; i++) {
+      let team = teams[i];
+      if (teams[i].roster.length > rosterSize) {
+          console.log(teams[i].roster.length);
+
+
+        // while (teams[i].roster.length > rosterSize) {
+          
+          //     availableFreeAgents.roster.push(teams[i].roster[0]);
+          //     teams[i].roster.splice(0, 1);
+          // }
+          
+          team.manageFootballLineup();
+        
+        let released = [];
+        for (let j = team.roster.length-1; j >= 0; j--) {
+          if ((team.roster.length - released.length) <= rosterSize) {
+            break;
+          }
+          let ply = team.roster[j];
+         
+          if(ply.position === POS_QB && team.qbs.length > POS_QB_REQUIREMENTS){
+            //cut player
+           
+            released.push(ply);
+            team.qbs.splice(team.qbs.indexOf(ply), 1);
+            
+          }
+          if(ply.position === POS_HB && team.rbs.length > POS_HB_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.rbs.splice(team.rbs.indexOf(ply), 1);
+            
+          }
+          if(ply.position === POS_WR && team.wrs.length > POS_WR_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.wrs.splice(team.wrs.indexOf(ply), 1);
+            
+          } if(ply.position === POS_TE && team.tes.length > POS_TE_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.tes.splice(team.tes.indexOf(ply), 1);
+            
+          }
+          if(ply.position >= POS_LT && ply.position<= POS_RT && team.ol.length > POS_OL_REQUIREMENTS){
+            //cut player
+            
+            
+            released.push(ply);
+            team.ol.splice(team.ol.indexOf(ply), 1);
+            
+          }
+          if(ply.position >= POS_LE && ply.position<= POS_DT && team.dl.length > POS_DL_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.dl.splice(team.dl.indexOf(ply), 1);
+            
+          }
+          if(ply.position >= POS_LOLB && ply.position<= POS_ROLB && team.lbs.length > POS_LB_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.lbs.splice(team.lbs.indexOf(ply), 1);
+            
+          }
+          if(ply.position >= POS_CB && ply.position<= POS_SS && team.dbs.length > POS_DB_REQUIREMENTS){
+            //cut player
+            
+            released.push(ply);
+            team.dbs.splice(team.dbs.indexOf(ply), 1);
+            
+          }
+          if(ply.position === POS_K && team.ks.length > POS_K_REQUIREMENTS){
+            //cut player
+            
+            released.push(ply);
+            team.ks.splice(team.ks.indexOf(ply), 1);
+            
+          }
+          if(ply.position === POS_P && team.ps.length > POS_P_REQUIREMENTS){
+            //cut player
+            released.push(ply);
+            team.ps.splice(team.ps.indexOf(ply), 1);
+            
+          }
+        }
+      }
+    }
+}
+
 // generatedPlayerGeneration();
+
+generatedPlayerGenerationToTeam();
+
+releasePlayers();
 
 manageCFPPollRating()
 
