@@ -1,16 +1,18 @@
-var teamsData = require("./JSON/Teams.json");
-// var teamsData = require("./JSON/NCAA/Teams.json");
+// var teamsData = require("./JSON/Teams.json");
+var teamsData = require("./JSON/NCAA/Teams.json");
 
-var playerData = require("./JSON/Players.json");
-// var playerData = require("./JSON/NCAA/Players.json");
+// var playerData = require("./JSON/Players.json");
+var playerData = require("./JSON/NCAA/Players.json");
 
-var freeAgents = require("./JSON/FreeAgents.json");
+// var freeAgents = require("./JSON/FreeAgents.json");
+var freeAgents = [];
 
 var draftData = require("./JSON/DraftData.json");
 
-var playersToGen = require('./JSON/GeneratedPlayers.json');
-var playersForTeam = require('./JSON/RequiredCreations.json');
-// var playersToGen = require('./JSON/NCAA/GeneratedPlayers.json');
+// var playersToGen = require('./JSON/GeneratedPlayers.json');
+// var playersForTeam = require('./JSON/RequiredCreations.json');
+// var powerRanks = require('./JSON/PowerRanks.json');
+var playersToGen = require('./JSON/NCAA/GeneratedPlayers.json');
 
 
 console.log(playersToGen[0].name);
@@ -1259,7 +1261,7 @@ conferences.push(easternConference, westernConference);
 
 
   //temporary
-  generateFreeAgents(600, 16);
+  // generateFreeAgents(600, 16);
   generateDraftClass();
 }
 
@@ -7532,6 +7534,127 @@ console.log(`${team.name} old:${oldRating} new:${team.rating}`);
 }
 
 
+function managePowerRanks(){
+  for(let i=0; i<powerRanks.length; i++){
+    for(let j=0; j<teams.length; j++){
+      if(teams[j].name.includes(powerRanks[i].name)){
+        teams[j].opsRanking = powerRanks[i].rank;
+      }
+    }
+  }
+
+
+
+  for(let i=0; i<teams.length; i++){
+    let team = teams[i];
+    console.log(team.name);
+    let oldRating = team.rating;
+    let maxChange = 5;
+    console.log(team.opsRanking);
+    let rating = 0;
+    rating = Math.round(scaleBetween(team.opsRanking, 83,76,1,32));
+    
+console.log(`${team.name} old:${oldRating} new:${rating}`);
+
+    
+    if (team.rating > rating) {
+      while (team.rating != rating) {
+        for (let i = 0; i < team.roster.length; i++) {
+          let ply = team.roster[i];
+          ply.awareness --;
+          if(ply.position === POS_QB){
+            ply.pass --;
+      
+          }
+      
+          if(ply.position >= POS_HB && ply.position <= POS_TE){
+            ply.rush --;
+            // ply.speed --;
+            ply.catch --;
+            ply.block --;
+          }
+      
+          if(ply.position >= POS_LT && ply.position <= POS_RT){
+            ply.block --;
+          }
+      
+          if(ply.position >= POS_LE && ply.position <= POS_RE){
+            ply.breakBlock --;
+            ply.tackle --;
+          }
+      
+          if(ply.position >= POS_LOLB && ply.position <= POS_SS){
+            ply.breakBlock --;
+            ply.tackle --;
+            ply.catch --;
+            // ply.speed --;
+          }
+      
+          if(ply.position >= POS_K && ply.position <= POS_P){
+            ply.kick --;
+          }
+          ply.calculateRating();
+          team.calculateRating();
+        }
+          if (team.rating <= rating) {
+            break;
+          }
+          if ((oldRating-team.rating) >= maxChange) {
+            break;
+          }
+      }
+    }
+    if (team.rating < rating) {
+      while (team.rating != rating) {
+        for (let i = 0; i < team.roster.length; i++) {
+          let ply = team.roster[i];
+          ply.awareness ++;
+          if(ply.position === POS_QB){
+            ply.pass ++;
+          }
+      
+          if(ply.position >= POS_HB && ply.position <= POS_TE){
+            ply.rush ++;
+            // ply.speed ++;
+            ply.catch ++;
+            ply.block ++;
+          }
+      
+          if(ply.position >= POS_LT && ply.position <= POS_RT){
+            ply.block ++;
+          }
+      
+          if(ply.position >= POS_LE && ply.position <= POS_RE){
+            ply.breakBlock ++;
+            ply.tackle ++;
+          }
+      
+          if(ply.position >= POS_LOLB && ply.position <= POS_SS){
+            ply.breakBlock ++;
+            ply.tackle ++;
+            ply.catch ++;
+            // ply.speed ++;
+          }
+      
+          if(ply.position >= POS_K && ply.position <= POS_P){
+            ply.kick ++;
+          }
+          ply.calculateRating();
+          team.calculateRating();
+        }
+          if (team.rating >= rating) {
+            break;
+          }
+          if ((oldRating-team.rating)*-1 >= maxChange) {
+            break;
+          }
+  }
+}
+console.log(`${team.name} old:${oldRating} new:${team.rating}`);
+  }
+}
+
+
 
 
 function generatedPlayerGeneration(){
@@ -7563,7 +7686,7 @@ function generatedPlayerGenerationToTeamNFL(){
       if(data.team === team.id){
         
     if(data.position === POS_QB){
-      ovr = teams[i].qbs[teams[i].qbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].qbs[teams[i].qbs.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7581,7 +7704,9 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position === POS_HB){
-      ovr = teams[i].rbs[teams[i].rbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].rbs.length > 0){
+      ovr = teams[i].rbs[teams[i].rbs.length -1].rating - (Math.round(Math.random()*5))-3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7600,7 +7725,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position === POS_WR){
-      ovr = teams[i].wrs[teams[i].wrs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].wrs[teams[i].wrs.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7621,7 +7746,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position === POS_TE){
-      ovr = teams[i].tes[teams[i].tes.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].tes[teams[i].tes.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7641,7 +7766,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position >= POS_LT && data.position <= POS_RT){
-      ovr = teams[i].ol[teams[i].ol.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].ol[teams[i].ol.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7660,7 +7785,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position >= POS_LE && data.position <= POS_DT){
-      ovr = teams[i].dl[teams[i].dl.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].dl[teams[i].dl.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7679,7 +7804,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position >= POS_LOLB && data.position <= POS_ROLB){
-      ovr = teams[i].lbs[teams[i].lbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].lbs[teams[i].lbs.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7698,7 +7823,7 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position >= POS_CB && data.position <= POS_SS){
-      ovr = teams[i].dbs[teams[i].dbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].dbs[teams[i].dbs.length -1].rating - (Math.round(Math.random()*5))-3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7717,7 +7842,9 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position === POS_K){
-      ovr = teams[i].ks[teams[i].ks.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].ks.length>0){
+      ovr = teams[i].ks[teams[i].ks.length -1].rating - (Math.round(Math.random()*5))-3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7736,7 +7863,9 @@ function generatedPlayerGenerationToTeamNFL(){
 
     }
     else if(data.position === POS_P){
-      ovr = teams[i].ps[teams[i].ps.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].ps.length>0){
+        ovr = teams[i].ps[teams[i].ps.length -1].rating - (Math.round(Math.random()*5))-3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7772,7 +7901,7 @@ function generatedPlayerGenerationToTeam(){
   for(let j=0; j<playersToGen.length; j++){
     if(playersToGen[j].opsId === teams[i].id){
     let data = playersToGen[j];
-    let ovr = 60;
+    let ovr = 65;
     let age;
     let position = -1;
 
@@ -7837,7 +7966,7 @@ function generatedPlayerGenerationToTeam(){
 
     if(teams[i].qbs.length < POS_QB_REQUIREMENTS+1 && position === POS_QB){
       console.log(teams[i].name);
-      ovr = teams[i].qbs[teams[i].qbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].qbs[teams[i].qbs.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7849,12 +7978,16 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].qbs.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].rbs.length < POS_HB_REQUIREMENTS && position === POS_HB){
-      ovr = teams[i].rbs[teams[i].rbs.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].rbs.length > 0){
+      ovr = teams[i].rbs[teams[i].rbs.length -1].rating - (Math.round(Math.random()*5))+3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7866,13 +7999,15 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].rbs.push(ply);
       teams[i].roster.push(ply);
 
 
     }
     else if(teams[i].wrs.length < POS_WR_REQUIREMENTS && position === POS_WR){
-      ovr = teams[i].wrs[teams[i].wrs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].wrs[teams[i].wrs.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7884,13 +8019,17 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].wrs.push(ply);
       teams[i].roster.push(ply);
 
 
     }
     else if(teams[i].tes.length < POS_TE_REQUIREMENTS && position === POS_TE){
-      ovr = teams[i].tes[teams[i].tes.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].tes.length > 0){
+      ovr = teams[i].tes[teams[i].tes.length -1].rating - (Math.round(Math.random()*5))+3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7902,13 +8041,15 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].tes.push(ply);
       teams[i].roster.push(ply);
 
 
     }
     else if(teams[i].ol.length < POS_OL_REQUIREMENTS && position >= POS_LT && position <= POS_RT){
-      ovr = teams[i].ol[teams[i].ol.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].ol[teams[i].ol.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7920,12 +8061,14 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].ol.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].dl.length < POS_DL_REQUIREMENTS && position >= POS_LE && position <= POS_DT){
-      ovr = teams[i].dl[teams[i].dl.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].dl[teams[i].dl.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7937,12 +8080,14 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].dl.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].lbs.length < POS_LB_REQUIREMENTS && position >= POS_LOLB && position <= POS_ROLB){
-      ovr = teams[i].lbs[teams[i].lbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].lbs[teams[i].lbs.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7954,12 +8099,14 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].lbs.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].dbs.length < POS_DB_REQUIREMENTS && position >= POS_CB && position <= POS_SS){
-      ovr = teams[i].dbs[teams[i].dbs.length -1] - (Math.round(Math.random()*5))+3;
+      ovr = teams[i].dbs[teams[i].dbs.length -1].rating - (Math.round(Math.random()*5))+3;
       if(ovr<61){
         ovr = 61;
       }
@@ -7971,13 +8118,17 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].dbs.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].ks.length < POS_K_REQUIREMENTS && position === POS_K){
       console.log(teams[i].name);
-      ovr = teams[i].ks[teams[i].ks.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].ks.length>0){
+      ovr = teams[i].ks[teams[i].ks.length -1].rating - (Math.round(Math.random()*5))+3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -7989,12 +8140,16 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
+
       teams[i].ks.push(ply);
       teams[i].roster.push(ply);
 
     }
     else if(teams[i].ps.length < POS_P_REQUIREMENTS && position === POS_P){
-      ovr = teams[i].ps[teams[i].ps.length -1] - (Math.round(Math.random()*5))+3;
+      if(teams[i].ps.length>0){
+        ovr = teams[i].ps[teams[i].ps.length -1].rating - (Math.round(Math.random()*5))+3;
+      }
       if(ovr<61){
         ovr = 61;
       }
@@ -8006,6 +8161,7 @@ function generatedPlayerGenerationToTeam(){
       ply.age = age;
       ply.height = data.height;
       ply.faceSrc = data.faceSrc;
+      ply.number = data.number;
       teams[i].ps.push(ply);
       teams[i].roster.push(ply);
 
@@ -8124,17 +8280,19 @@ function releasePlayers() {
 }
 
 
-generatedPlayerGeneration();
+// generatedPlayerGeneration();
 
-generatedPlayerGenerationToTeamNFL();
+// generatedPlayerGenerationToTeamNFL();
 
-// generatedPlayerGenerationToTeam();
+generatedPlayerGenerationToTeam();
 
 // releasePlayers();
 
-// manageCFPPollRating()
+manageCFPPollRating()
 
-balanceRoster();
+// balanceRoster();
+
+// managePowerRanks();
 
 makeRosterFilePC();
 
