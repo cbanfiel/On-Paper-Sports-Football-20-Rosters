@@ -6,16 +6,15 @@
         "type": "Roster"
     },
     {
+        "name": "NCAA 19-20 v4 (12/13/19)",
+        "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20v4r1.json",
+        "type": "Roster",
+        "sliderType": "college"
+    },
+    {
         "name": "NCAA 19-20 v3 (10/9/19)",
         "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20v3.json",
         "type": "Roster",
         "sliderType": "college"
     }
-    // ,
-    // {
-    //     "name": "NCAA 19-20 v4 TEST  (12/13/19)",
-    //     "link": "https://raw.githubusercontent.com/cbanfiel/On-Paper-Sports-Football-20-Rosters/master/NCAA%202019-20v4.json",
-    //     "type": "Roster",
-    //     "sliderType": "college"
-    // }
 ]
