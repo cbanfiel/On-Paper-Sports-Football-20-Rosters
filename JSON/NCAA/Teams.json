@@ -1006,5 +1006,21 @@
     "conferenceId": 0,
     "division": 4,
     "opsRank": 124
+  },
+  {
+    "name": "Appalachian State Mountaineers",
+    "id": 2026,
+    "logoSrc": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/ncaa/500/2026.png&w=200",
+    "conferenceId": 0,
+    "division": 4,
+    "opsRank": 124
+  },
+  {
+    "name": "Liberty Flames",
+    "id": 2335,
+    "logoSrc": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/ncaa/500/2335.png&w=200",
+    "conferenceId": 0,
+    "division": 4,
+    "opsRank": 124
   }
 ]
